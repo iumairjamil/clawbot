@@ -220,45 +220,141 @@ clawdbot pairing approve telegram ABC12345
 
 ---
 
-## 配置Claude Code API中转
+## 配置自定义中转站（多模型支持）
 
-### 1. 获取API凭证
+### 方案一：配置多模型中转站（推荐）
 
-从Claude Code API中转服务获取：
-- **API Base URL**: `https://code.claude-opus.top/api`
-- **API Key**: `cr_xxxxxxxxxxxxx`
+这个方案支持同时配置 GPT、Claude、Gemini 等多个模型。
+
+#### 1. 获取API凭证
+
+从中转服务获取：
+- **API Base URL**: `https://apipro.maynor1024.live`
+- **API Key**: `sk-xxxxxxxxxxxxx`
 
 **推荐服务：**
-- 购买链接：https://maynorai.tqfk.xyz/item/7
 - 推荐中转API：https://apipro.maynor1024.live/
+- 购买链接：https://maynorai.tqfk.xyz/item/7
 
-### 2. 修改配置文件
+#### 2. 修改主配置文件
 
 > **⚠️ 重要提示：** Clawdbot不支持通过环境变量`ANTHROPIC_BASE_URL`来设置自定义API端点。必须通过配置文件的`models.providers`来配置。
 
-#### 步骤1：备份配置文件
+**步骤1：备份配置文件**
 
 ```bash
 cp ~/.clawdbot/clawdbot.json ~/.clawdbot/clawdbot.json.bak
 ```
 
-#### 步骤2：编辑配置文件
+**步骤2：编辑配置文件**
 
 ```bash
 nano ~/.clawdbot/clawdbot.json
 ```
 
-在配置文件中添加`models`部分：
+在配置文件中添加多个 provider：
 
 ```json
 {
   "models": {
+    "mode": "merge",
     "providers": {
-      "anthropic": {
-        "baseUrl": "https://code.claude-opus.top/api",
-        "apiKey": "cr_你的API密钥",
+      "api-proxy-gpt": {
+        "baseUrl": "https://apipro.maynor1024.live/v1",
+        "api": "openai-completions",
+        "apiKey": "sk-你的API密钥",
+        "models": [
+          {
+            "id": "gpt-4o",
+            "name": "GPT-4o",
+            "reasoning": false,
+            "input": ["text"],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 128000,
+            "maxTokens": 8192
+          }
+        ]
+      },
+      "api-proxy-claude": {
+        "baseUrl": "https://apipro.maynor1024.live",
         "api": "anthropic-messages",
-        "models": []
+        "apiKey": "sk-你的API密钥",
+        "models": [
+          {
+            "id": "claude-sonnet-4-5-20250929",
+            "name": "Claude Sonnet 4.5",
+            "reasoning": false,
+            "input": ["text"],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      },
+      "api-proxy-google": {
+        "baseUrl": "https://apipro.maynor1024.live/v1beta",
+        "api": "google-generative-ai",
+        "apiKey": "sk-你的API密钥",
+        "models": [
+          {
+            "id": "gemini-3-pro-preview",
+            "name": "Gemini 3 Pro",
+            "reasoning": false,
+            "input": ["text"],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 2000000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "api-proxy-claude/claude-sonnet-4-5-20250929"
+      },
+      "models": {
+        "api-proxy-gpt/gpt-4o": {
+          "alias": "GPT-4o"
+        },
+        "api-proxy-claude/claude-sonnet-4-5-20250929": {
+          "alias": "Claude Sonnet 4.5"
+        },
+        "api-proxy-google/gemini-3-pro-preview": {
+          "alias": "Gemini 3 Pro"
+        }
+      }
+    }
+  },
+  "auth": {
+    "profiles": {
+      "api-proxy-gpt:default": {
+        "provider": "api-proxy-gpt",
+        "mode": "api_key"
+      },
+      "api-proxy-claude:default": {
+        "provider": "api-proxy-claude",
+        "mode": "api_key"
+      },
+      "api-proxy-google:default": {
+        "provider": "api-proxy-google",
+        "mode": "api_key"
       }
     }
   }
@@ -271,8 +367,95 @@ nano ~/.clawdbot/clawdbot.json
 |------|------|------|
 | baseUrl | 自定义API端点 | ✅ |
 | apiKey | 你的API密钥 | ✅ |
-| api | 必须设置为`anthropic-messages` | ✅ |
-| models | 必须包含此字段，可以为空数组`[]` | ✅ |
+| api | API类型（openai-completions/anthropic-messages/google-generative-ai） | ✅ |
+| models | 模型列表，必须包含此字段 | ✅ |
+
+**步骤3：配置鉴权文件**
+
+编辑 `~/.clawdbot/agents/main/agent/auth-profiles.json`：
+
+```bash
+nano ~/.clawdbot/agents/main/agent/auth-profiles.json
+```
+
+添加以下内容：
+
+```json
+{
+  "version": 1,
+  "profiles": {
+    "api-proxy-gpt:default": {
+      "type": "api_key",
+      "provider": "api-proxy-gpt",
+      "key": "sk-你的API密钥"
+    },
+    "api-proxy-claude:default": {
+      "type": "api_key",
+      "provider": "api-proxy-claude",
+      "key": "sk-你的API密钥"
+    },
+    "api-proxy-google:default": {
+      "type": "api_key",
+      "provider": "api-proxy-google",
+      "key": "sk-你的API密钥"
+    }
+  },
+  "lastGood": {
+    "api-proxy-gpt": "api-proxy-gpt:default",
+    "api-proxy-claude": "api-proxy-claude:default",
+    "api-proxy-google": "api-proxy-google:default"
+  }
+}
+```
+
+---
+
+### 方案二：配置 Claude Code 中转（需要 User-Agent）
+
+如果你使用的是需要 Claude Code User-Agent 验证的中转站：
+
+#### 1. 获取API凭证
+
+- **API Base URL**: `https://code.claude-opus.top/api`
+- **API Key**: `cr_xxxxxxxxxxxxx`
+
+#### 2. 配置文件（带 User-Agent）
+
+```json
+{
+  "models": {
+    "providers": {
+      "code-claude-opus": {
+        "baseUrl": "https://code.claude-opus.top/api",
+        "apiKey": "cr_你的API密钥",
+        "auth": "api-key",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-opus-4-20250514",
+            "name": "Claude Opus 4",
+            "reasoning": false,
+            "input": ["text"],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "headers": {
+              "User-Agent": "Claude-Code/1.0.0"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+**关键点：** 在 `models` 数组的每个模型中添加 `headers` 字段来设置自定义 User-Agent。
 
 **完整配置示例：**
 
@@ -318,23 +501,14 @@ nano ~/.clawdbot/clawdbot.json
 }
 ```
 
-#### 步骤3：验证配置格式
+#### 步骤4：验证配置格式
 
 ```bash
 # 使用jq验证JSON格式
 cat ~/.clawdbot/clawdbot.json | jq '.models'
 
-# 应该输出：
-# {
-#   "providers": {
-#     "anthropic": {
-#       "baseUrl": "https://code.claude-opus.top/api",
-#       "apiKey": "cr_...",
-#       "api": "anthropic-messages",
-#       "models": []
-#     }
-#   }
-# }
+# 验证鉴权配置
+cat ~/.clawdbot/agents/main/agent/auth-profiles.json | jq '.'
 ```
 
 ### 3. 重启Gateway服务
@@ -511,7 +685,39 @@ nvm alias default 22
 node --version  # 应显示 v22.x.x
 ```
 
-### ❌ 踩坑5：忘记重启Gateway
+### ❌ 踩坑5：中转API需要特定User-Agent
+
+**症状：** API返回403错误，提示"本服务仅限 Claude Code 官方客户端使用"
+
+**问题原因：** 某些中转站要求特定的User-Agent header。
+
+**✅ 解决方案：** 在模型配置中添加`headers`字段：
+```json
+{
+  "models": {
+    "providers": {
+      "code-claude-opus": {
+        "baseUrl": "https://code.claude-opus.top/api",
+        "apiKey": "cr_你的密钥",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-opus-4-20250514",
+            "name": "Claude Opus 4",
+            "headers": {
+              "User-Agent": "Claude-Code/1.0.0"
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+### ❌ 踩坑6：忘记重启Gateway
 
 **问题：** 修改配置后没有重启Gateway，配置不生效。
 
