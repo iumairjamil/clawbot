@@ -15,7 +15,8 @@
 
 ---
 
-推荐新的部署教程，[接入飞书](https://github.com/xianyu110/openclaw-feishu)
+推荐新的部署教程，[Clawdbot安装教程：从零开始到接入飞书！
+](https://github.com/xianyu110/openclaw-feishu)
 
 ## 简介
 
